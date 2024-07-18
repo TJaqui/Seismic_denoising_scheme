@@ -1,7 +1,9 @@
 # Seismic_denoising_scheme
 
-##Metrics comparison
- PSNR (dB)            | Gaussiano | Poisson | Speckle | Sal y pimienta | Lineal | Lineal v2 | Ondas/difracción | Ondas/difracción  v2 | Stripes | Correlacionado g1 | Correlacionado g2 | Correlacionado g1v | Correlacionado gv1I | Blur   | S1     | S1 blur |
+**Comparison metrics**
+Comparison metrics for the implemented 16 types noises.
+ 
+ PSNR (dB)            | Gaussian | Poisson | Speckle | Salt and pepper | Linear | Linear v2 | Waves/diffraction | Waves/diffraction  v2 | Stripes | Correlated g1 | Correlated g2 | Correlated g1v | Correlated gv1I | Blur   | S1     | S1 blur |
 | -------------------- | --------- | ------- | ------- | -------------- | ------ | --------- | ---------------- | -------------------- | ------- | ----------------- | ----------------- | ------------------ | ------------------- | ------ | ------ | ------- |
 | Median filter| 22,947    | 22,899  | 15,787  | 20,833         | 18,867 | 21,004    | 22,124           | 19,635               | 18,838  | 22,774            | 22,923            | 22,676             | 22,319              | 17,400 | 23,124 | 19,403  |
 | DIP                  | 31,992    | 31,997  | 27,273  | 28,028         | 29,238 | 26,117    | 30,986           | 30,241               | 32,717  | 29,538            | 31,654            | 33,089             | 33,298              | 30,426 | 31,062 | 30,456  |
@@ -11,7 +13,7 @@
 
 
 
-| SSIM                 | Gaussiano | Poisson | Speckle | Sal y pimienta | Lineal | Lineal v2 | Ondas/difracción | Ondas/difracción  v2 | Stripes | Correlacionado g1 | Correlacionado g2 | Correlacionado g1v | Correlacionado gv1I | Blur  | S1    | S1 blur |
+| SSIM                 | Gaussian | Poisson | Speckle | Salt and pepper | Linear | Linear v2 | Waves/diffraction | Waves/diffraction  v2 | Stripes | Correlated g1 | Correlated g2 | Correlated g1v | Correlated gv1I | Blur  | S1    | S1 blur |
 | -------------------- | --------- | ------- | ------- | -------------- | ------ | --------- | ---------------- | -------------------- | ------- | ----------------- | ----------------- | ------------------ | ------------------- | ----- | ----- | ------- |
 | Median filter | 0,783     | 0,784   | 0,563   | 0,712          | 0,560  | 0,677     | 0,770            | 0,682                | 0,633   | 0,782             | 0,784             | 0,785              | 0,798               | 0,514 | 0,796 | 0,683   |
 | DIP                  | 0,965     | 0,961   | 0,908   | 0,881          | 0,947  | 0,894     | 0,957            | 0,938                | 0,964   | 0,944             | 0,958             | 0,962              | 0,973               | 0,904 | 0,954 | 0,948   |
