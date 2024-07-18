@@ -1,6 +1,7 @@
 # Seismic_denoising_scheme
 
 **Comparison metrics**
+
 Comparison metrics for the implemented 16 types noises.
  
  PSNR (dB)            | Gaussian | Poisson | Speckle | Salt and pepper | Linear | Linear v2 | Waves/diffraction | Waves/diffraction  v2 | Stripes | Correlated g1 | Correlated g2 | Correlated g1v | Correlated gv1I | Blur   | S1     | S1 blur |
