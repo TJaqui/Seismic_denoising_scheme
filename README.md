@@ -1,4 +1,6 @@
-# Seismic_denoising_scheme
+# Guided and supervised learning by generative models for a seismic denoising scheme in post-stack seismic images
+
+
 
 **Comparison metrics**
 
