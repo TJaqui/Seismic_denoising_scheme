@@ -1,0 +1,4 @@
+name: seismic
+channels:
+  - defaults
+prefix: C:\Users\juter\anaconda3\envs\seismic
