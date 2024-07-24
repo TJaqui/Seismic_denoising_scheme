@@ -49,16 +49,19 @@ def loss_s(x, y):
     return (loss_fn(y,x)+ (1 - ssim(x,y)))
 
 
-def degradedImages():
+def degradedImages(section, samples):
 
     x1 = []
     x2 = []
     start = time.time()
-    sam = utils.generate_examples(gen, 5)
+    sam = utils.generate_examples(gen=gen, steps=5, n=samples)
     sam = sam
+    """
     data = transferutils.preprocess_image('style_transfer/patch_6314.jpg', 128)
     data = np.array(data)
     data = data[:,:,0]
+    """
+    data = section
     mn = []
 
     data = torch.from_numpy(data).float()
@@ -98,18 +101,20 @@ def degradedImages():
 
     return innd, innc
 
-def degradingImages(queue):
+def degradingImages(queue, section, samples):
 
     x1 = []
     x2 = []
     mn = []
     start = time.time()
-    sam = utils.generate_examples(gen, 5)
+    sam = utils.generate_examples(gen=gen, steps=5, n=samples)
     sam = sam
+    """
     data = transfer.preprocess_image('style_transfer/patch_6314.jpg', 128)
     data = np.array(data)
     data = data[:, :, 0]
-
+    """
+    data = section
     data = torch.from_numpy(data).float()
     data = data.unsqueeze(0).unsqueeze(0)
     print(sam.shape, data.shape)
@@ -152,8 +157,10 @@ def degradingImages(queue):
 
 def train(queue, epochs, loss_train, batch_size, i, psnr_train):
 
-    if i>1:
+    if i==0:
         model.load_state_dict(torch.load('checkpoints/att_u_fine.pt'))
+    else:
+        model.load_state_dict(torch.load('att_u_fine.pt'))
     model.train()
 
     tensor1_np, tensor2_np = queue.get()
@@ -215,32 +222,33 @@ def train(queue, epochs, loss_train, batch_size, i, psnr_train):
             "(for 1 minibatch) Training loss %.7f | PSNR training %.7f"
             % (float(loss_value), float(psnrt))
         )
-        torch.save(model.state_dict(), "checkpoints/att_u_fine.pt")
+        torch.save(model.state_dict(), "att_u_fine.pt")
 
-if __name__=='__main__':
+#if __name__=='__main__':
+def parallelTrain(section, batch_size, epochs, iterations, gen_samples):
+    
+    #multiprocessing.set_start_method('spawn')
 
-    multiprocessing.set_start_method('spawn')
-
-    innd1, innd2 = degradedImages()
+    innd1, innd2 = degradedImages(section, gen_samples)
     innd1_np = innd1.detach().cpu().numpy()
     innd2_np = innd2.cpu().numpy()
 
     queue = multiprocessing.Queue()
     queue.put((innd1_np, innd2_np))
 
-    epochs = 30
-    batch_size = 5
+    epochs = epochs
+    batch_size = batch_size
     loss_train = []
     psnr_train = []
 
-    iterations=2
+    iterations=iterations
 
     for i in range(iterations):
         print(i)
         pro1 = multiprocessing.Process(target=train, args=(queue, epochs, loss_train, batch_size,i,psnr_train))
         pro1.start()
 
-        pro2 = multiprocessing.Process(target=degradingImages, args=(queue,))
+        pro2 = multiprocessing.Process(target=degradingImages, args=(queue,section,gen_samples))
         pro2.start()
 
         pro1.join()
