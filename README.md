@@ -1,6 +1,13 @@
 # Guided and supervised learning by generative models for a seismic denoising scheme in post-stack seismic images
 
-
+To install the project packages, you can use Anaconda.
+```
+conda env create -f environment.yml
+```
+or python.
+```
+pip install -r requirements.txt
+```
 
 **Comparison metrics**
 
