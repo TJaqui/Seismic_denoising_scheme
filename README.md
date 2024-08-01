@@ -1,5 +1,11 @@
 # Guided and supervised learning by generative models for a seismic denoising scheme in post-stack seismic images
 
+**Proposed method**
+
+![alt text](esquema.png "Seismic denoising scheme")
+
+The abive figure Shows the proposed seismic denoising scheme with its two main processes. The Dynamic Database process starts with a Progressive Growing GAN (PGGAN) generating seismic images on the CPU, which takes approximately 1 minute for a batch size of 1000 clean images X. The generated images are then degraded using a degradation operator, which takes around 8 minutes to transform the batch into its degraded version Y. Meanwhile, the images from the dynamic database are used to train an Attention U-Net model on the GPU, involving 100 epochs for each batch of images. While the training is ongoing, a new batch is being synthesized by the Dynamic Database, which is then queued until the current training cycle is complete. This workflow is repeated for a defined number of iterations (in this case, 15), ensuring that while the model is being trained, new training data is being prepared simultaneously, optimizing the training process.
+
 To install the project packages, you can use Anaconda.
 ```
 conda env create -f environment.yml
