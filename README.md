@@ -2,7 +2,7 @@
 
 **Proposed method**
 
-![alt text](escheme.png "Seismic denoising scheme")
+![alt text](scheme.png "Seismic denoising scheme")
 
 <div style="text-align: justify"> 
 <b>Figure 1.</b> Shows the proposed seismic denoising scheme with its two main processes. <b>The Dynamic Database</b> process starts with a Progressive Growing GAN (PGGAN) generating seismic images on the CPU, which takes approximately 1 minute for a batch size of 1000 clean images X. The generated images are then degraded using a <b>degradation operator</b>, which takes around 8 minutes to transform the batch into its degraded version Y. Meanwhile, the <b>images from the dynamic database are used to train an Attention U-Net model on the GPU</b>, involving 100 epochs for each batch of images. While the training is ongoing, a new batch is being synthesized by the Dynamic Database, which is then queued until the current training cycle is complete. This workflow is repeated for a defined number of cycles (in this case, 15), ensuring that while the model is being trained, <b>new training data is being prepared simultaneously</b>, optimizing the training process.
