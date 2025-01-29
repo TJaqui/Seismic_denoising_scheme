@@ -1,5 +1,5 @@
-# Guided and supervised learning by generative models for a seismic denoising scheme in post-stack seismic images
-
+# Post-stack Seismic Data Preconditioning via Dynamic Guided Learning
+This work proposes a dynamic-guided learning workflow that utilizes a dynamic database, which continuously generates both clean and noisy patches during training. This database guides the learning of a supervised enhancement task. By introducing variability into the training data, the method significantly improves generalization, ensuring it is not dependent on specific known distributions and eliminates the need for external datasets. 
 **Proposed method**
 
 ![alt text](scheme.png "Seismic denoising scheme")
