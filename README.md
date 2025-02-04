@@ -46,6 +46,7 @@ PSNR (dB) and SSIM metrics across different simulated types of noise for enhance
 # Citation
 If you find the Dynamic Guided Learning useful in your research, please consider citing:
 
+```
 @misc{torresquintero2025poststackseismicdatapreconditioning,
       title={Poststack Seismic Data Preconditioning via Dynamic Guided Learning}, 
       author={Javier Torres-Quintero and Paul Goyes-Peñafiel and Ana Mantilla-Dulcey and Luis Rodríguez-López and José Sanabria-Gómez and Henry Arguello},
@@ -55,3 +56,4 @@ If you find the Dynamic Guided Learning useful in your research, please consider
       primaryClass={physics.geo-ph},
       url={https://arxiv.org/abs/2502.00887}, 
 }
+```
