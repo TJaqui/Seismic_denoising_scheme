@@ -76,7 +76,7 @@ def seed_everything(seed=42):
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
 '''
-def generate_examples(gen, steps, truncation=0.7, n=10):
+def generate_examples(gen, steps, truncation=0.7, n=1000):
     """
     Tried using truncation trick here but not sure it actually helped anything, you can
     remove it if you like and just sample from torch.randn

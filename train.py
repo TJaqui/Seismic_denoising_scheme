@@ -18,7 +18,7 @@ img_size = 128
 Z_DIM = 256
 IN_CHANNELS = 256
 initial_learning_rate = 1e-2
-decay_rate = 0.1
+decay_rate = 0.6
 
 start = time.time()
 
@@ -107,7 +107,7 @@ def degradingImages(queue):
     queue.put((innd1.numpy(), innd2.numpy()))
     print("new damages")
 
-def train(queue, epochs,  batch_size, i):
+def train(queue,tot_epochs, epochs,  batch_size, i):
 
     if i > 1:
         model.load_state_dict(torch.load('guided_att_u.pt.pt'))
@@ -157,17 +157,11 @@ def train(queue, epochs,  batch_size, i):
                 save_image(li, f"epochs/image_epoch_{i}_{epoch}.jpg")
                 model.train()
             '''
-        if epoch == int(epochs * 0.10):
+        if tot_epochs > 0 and tot_epochs % 200 == 0:
             lr_schedule.step()
 
-        if epoch == int(epochs * 0.30):
-            lr_schedule.step()
-        if epoch == int(epochs * 0.50):
-            lr_schedule.step()
-        if epoch == int(epochs * 0.70):
-            lr_schedule.step()
-        if epoch == int(epochs * 0.90):
-            lr_schedule.step()
+
+     
 
         print(
             "(for 1 minibatch) Training loss %.7f | PSNR training %.7f"
@@ -187,15 +181,16 @@ if __name__=='__main__':
     queue = multiprocessing.Queue()
     queue.put((innd1_np, innd2_np))
 
-    epochs = 50
+    epochs = 100
     batch_size = 5
 
 
-    iterations = 1
+    iterations = 4
 
     for i in range(iterations):
         print(i)
-        pro1 = multiprocessing.Process(target=train, args=(queue, epochs,batch_size,i))
+        tot_epochs=i*epochs
+        pro1 = multiprocessing.Process(target=train, args=(queue,tot_epochs, epochs,batch_size,i))
         pro1.start()
 
         pro2 = multiprocessing.Process(target=degradingImages, args=(queue,))

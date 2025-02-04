@@ -1,13 +1,13 @@
 # Post-stack Seismic Data Preconditioning via Dynamic Guided Learning
 
-This work proposes a dynamic-guided learning workflow that utilizes a dynamic database, which continuously generates both clean and noisy patches during training. This database guides the learning of a supervised enhancement task. By introducing variability into the training data, the method significantly improves generalization, ensuring it is not dependent on specific known distributions and eliminates the need for external datasets.   
+This is the official implementation of the paper **Poststack Seismic Data Preconditioning via Dynamic Guided Learning** (arXiv:2502.00887). This work introduces a dynamic guided learning workflow that utilizes a dynamic database to generate both clean and noisy patches during training. This database guides the learning process for a supervised enhancement task, improving generalization by reducing reliance on specific known distributions. As a result, the method eliminates the need for external datasets while enhancing generalization and adaptability.
 
 **Proposed method**
 
 ![alt text](scheme.png "Seismic denoising scheme")
 
 <div style="text-align: justify"> 
-<b>Figure 1.</b> Shows the proposed seismic denoising scheme with its two main processes. <b>The Dynamic Database</b> process starts with a Progressive Growing GAN (PGGAN) generating seismic images on the CPU, which takes approximately 1 minute for a batch size of 1000 clean images X. The generated images are then degraded using a <b>degradation operator</b>, which takes around 8 minutes to transform the batch into its degraded version Y. Meanwhile, the <b>images from the dynamic database are used to train an Attention U-Net model on the GPU</b>, involving 100 epochs for each batch of images. While the training is ongoing, a new batch is being synthesized by the Dynamic Database, which is then queued until the current training cycle is complete. This workflow is repeated for a defined number of cycles (in this case, 15), ensuring that while the model is being trained, <b>new training data is being prepared simultaneously</b>, optimizing the training process.
+<b>Figure 1.</b> The dynamic guided learning workflow with two main processes: (I) the dynamic database that generates <b>X</b> poststack seismic data using the generative model (1000 patches) and <b>Y</b> noisy poststack seismic data (4000 patches) using the degradation model containing 12 different types of noise. (II) The supervised enhancement task learns distinctive features of poststack seismic data during training. While process (II) is training, process (I) generates the next batch of images with different types of noise randomly selected, completing one cycle, with (I) in CPU and (II) in GPU to maximize computational efficiency.
 </div>
 
 <hr/>
@@ -23,24 +23,35 @@ or python.
 pip install -r requirements.txt
 ```
 
-**Comparison metrics**
 
-Comparison metrics for the implemented 16 types noises.
- 
- PSNR (dB)            | Gaussian | Poisson | Speckle | Salt and pepper | Linear | Waves/diffraction | Stripes | Correlated g1 | Correlated g2 | Blur   | Correlated g12     |  Correlated g12 blur |
-| -------------------- | --------- | ------- | ------- | -------------- | ------ | ---------------- | ------- | ----------------- | ----------------- | ------ | ------ | ------- |
-| Median filter  | 22,947    | 22,899  | 15,787  | 20,833         | 18,867     | 22,124     | 18,838  | 22,774            | 22,923            | 17,400 | 23,124 | 19,403  |
-| DIP            | 31,992    | 31,997  | 27,273  | 28,028         | 29,238     | 30,986     | 32,717  | 29,538            | 31,654            | 30,426 | 31,062 | 30,456  |
-| S2S-WTV        | 29,021    | 28,493  | 16,804  | 20,742         | 23,620     | 27,884     | 20,687  | 27,272            | 28,509            | 17,707 | 28,775 | 20,496  |
-| Baseline       | 31,658    | 31,291  | 19,370  | 22,551         | 26,580     | 31,602     | 25,201  | 29,442            | 31,001            | 19,085 | 31,271 | 22,129  |
-| Proposed       | 33,457    | 34,248  | 27,336  | 35,922         | 36,859     | 35,319     | 39,361  | 31,108            | 34,262            | 27,337 | 33,593 | 31,543  |
+**Metrics**
 
+PSNR (dB) and SSIM metrics across different simulated types of noise for enhancement methods, including the median filter, DIP, S2S-WTV, and Baseline. **Bold text** indicates the best result, while <u>underlined</u> text highlights the second-best.
 
+| Noises              | SSIM (Medial filter) | PSNR (Medial filter) | SSIM (DIP) | PSNR (DIP) | SSIM (S2S-WTV) | PSNR (S2S-WTV) | SSIM (Baseline) | PSNR (Baseline) | SSIM (Proposed) | PSNR (Proposed) |
+|---------------------|---------------------|---------------------|------------|------------|---------------|---------------|---------------|---------------|---------------|---------------|
+| Gaussian           | 0.783               | 22.947              | <u>0.965</u>    | <u>31.992</u>   | 0.952         | 29.021        | 0.975         | 31.658        | **0.985**     | **33.457**     |
+| Poisson            | 0.784               | 22.899              | <u>0.961</u>    | <u>31.997</u>   | 0.952         | 28.493        | 0.974         | 31.291        | **0.986**     | **34.248**     |
+| Speckle            | 0.563               | 15.787              | <u>0.908</u>    | <u>27.273</u>   | 0.781         | 16.804        | 0.807         | 19.370        | **0.934**     | **27.336**     |
+| Salt and pepper    | 0.712               | 20.833              | <u>0.881</u>    | <u>28.028</u>   | 0.731         | 20.742        | 0.825         | 22.551        | **0.992**     | **35.922**     |
+| Linear             | 0.560               | 18.867              | <u>0.947</u>    | <u>29.238</u>   | 0.839         | 23.620        | 0.926         | 26.580        | **0.994**     | **36.859**     |
+| Waves              | 0.770               | 22.124              | 0.957      | 30.986     | 0.949         | 27.884        | <u>0.976</u>       | <u>31.602</u>      | **0.991**     | **35.319**     |
+| Stripes            | 0.633               | 18.838              | <u>0.964</u>    | <u>32.717</u>   | 0.798         | 20.687        | 0.948         | 25.201        | **0.998**     | **39.361**     |
+| Correlated g₁      | 0.782               | 22.774              | 0.944      | <u>29.538</u>   | 0.934         | 27.272        | <u>0.965</u>       | 29.442        | **0.972**     | **31.108**     |
+| Correlated g₂      | 0.784               | 22.923              | 0.950      | <u>31.654</u>   | 0.942         | 28.509        | <u>0.978</u>       | 31.001        | **0.987**     | **34.262**     |
+| Blur               | 0.516               | 17.400              | **0.904**  | **30.426** | 0.550         | 17.707        | 0.600         | 19.085        | <u>0.901</u>       | <u>27.337</u>       |
+| Correlated g₁₂     | 0.796               | 23.124              | <u>0.954</u>    | <u>31.062</u>   | 0.953         | 28.775        | 0.981         | 31.271        | **0.984**     | **33.593**     |
+| g₁₂ blur          | 0.683               | 19.403              | <u>0.948</u>    | <u>30.456</u>   | 0.770         | 20.496        | 0.851         | 22.129        | **0.981**     | **31.543**     |
 
-| SSIM                 | Gaussian | Poisson | Speckle | Salt and pepper | Linear | Waves/diffraction | Stripes | Correlated g1 | Correlated g2 | Blur  | S1    | S1 blur |
-| -------------------- | --------- | ------- | ------- | -------------- | ------ | ---------------- | ------- | ----------------- | ----------------- | ----- | ----- | ------- |
-| Median filter | 0,783     | 0,784   | 0,563   | 0,712      | 0,560      | 0,770     | 0,633   | 0,782      | 0,784           | 0,514 | 0,796 | 0,683   |
-| DIP           | 0,965     | 0,961   | 0,908   | 0,881      | 0,947      | 0,957     | 0,964   | 0,944      | 0,958           | 0,904 | 0,954 | 0,948   |
-| S2S-WTV       | 0,952     | 0,952   | 0,781   | 0,731      | 0,839      | 0,949     | 0,798   | 0,934      | 0,942           | 0,550 | 0,953 | 0,770   |
-| Baseline      | 0,975     | 0,974   | 0,807   | 0,825      | 0,926      | 0,976     | 0,948   | 0,965      | 0,978           | 0,600 | 0,981 | 0,851   |
-| Proposed      | 0,985     | 0,986   | 0,934   | 0,992      | 0,994      | 0,991     | 0,998   | 0,972      | 0,987           | 0,901 | 0,984 | 0,981   |
+# Citation
+If you find the Dynamic Guided Learning useful in your research, please consider citing:
+
+@misc{torresquintero2025poststackseismicdatapreconditioning,
+      title={Poststack Seismic Data Preconditioning via Dynamic Guided Learning}, 
+      author={Javier Torres-Quintero and Paul Goyes-Peñafiel and Ana Mantilla-Dulcey and Luis Rodríguez-López and José Sanabria-Gómez and Henry Arguello},
+      year={2025},
+      eprint={2502.00887},
+      archivePrefix={arXiv},
+      primaryClass={physics.geo-ph},
+      url={https://arxiv.org/abs/2502.00887}, 
+}
