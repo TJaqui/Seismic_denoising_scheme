@@ -1,6 +1,6 @@
 # Post-stack Seismic Data Preconditioning via Dynamic Guided Learning
 
-This is the official implementation of the paper **Poststack Seismic Data Preconditioning via Dynamic Guided Learning** (arXiv:2502.00887). This work introduces a dynamic guided learning workflow that utilizes a dynamic database to generate both clean and noisy patches during training. This database guides the learning process for a supervised enhancement task, improving generalization by reducing reliance on specific known distributions. As a result, the method eliminates the need for external datasets while enhancing generalization and adaptability.
+This is the official implementation of the paper **Poststack Seismic Data Preconditioning via Dynamic Guided Learning** [arXiv](https://arxiv.org/abs/2502.00887). This work introduces a dynamic guided learning workflow that utilizes a dynamic database to generate both clean and noisy patches during training. This database guides the learning process for a supervised enhancement task, improving generalization by reducing reliance on specific known distributions. As a result, the method eliminates the need for external datasets while enhancing generalization and adaptability.
 
 **Proposed method**
 
